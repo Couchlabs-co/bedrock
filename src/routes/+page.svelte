@@ -4,7 +4,10 @@
 
 <svelte:head>
     <title>LOCATION — Find your next property in Australia</title>
-    <meta name="description" content="Search properties for sale and rent across Australia. Houses, apartments, land, rural, and commercial real estate." />
+    <meta
+        name="description"
+        content="Search properties for sale and rent across Australia. Houses, apartments, land, rural, and commercial real estate."
+    />
 </svelte:head>
 
 <section class="hero" aria-labelledby="hero-heading">
@@ -22,9 +25,7 @@
                     placeholder="Search suburb, postcode, or address..."
                     autocomplete="off"
                 />
-                <button type="submit" class="search-btn">
-                    Search
-                </button>
+                <button type="submit" class="search-btn"> Search </button>
             </div>
 
             <div class="search-tabs" role="tablist" aria-label="Listing type">
@@ -50,50 +51,43 @@
 </section>
 
 <style>
-    .hero
-    {
+    .hero {
         padding: var(--space-16) 0;
         text-align: center;
         background: var(--color-bg-secondary);
     }
 
-    .hero-inner
-    {
+    .hero-inner {
         max-width: 640px;
         margin-inline: auto;
     }
 
-    .hero h1
-    {
+    .hero h1 {
         font-size: 2.5rem;
         font-weight: 700;
         margin-bottom: var(--space-2);
     }
 
-    .hero-subtitle
-    {
+    .hero-subtitle {
         color: var(--color-text-secondary);
         font-size: 1.125rem;
         margin-bottom: var(--space-8);
     }
 
-    .hero-search
-    {
+    .hero-search {
         display: flex;
         flex-direction: column;
         gap: var(--space-4);
     }
 
-    .search-input-group
-    {
+    .search-input-group {
         display: flex;
         border-radius: var(--radius-lg);
         overflow: hidden;
         box-shadow: var(--shadow-md);
     }
 
-    .search-input-group input
-    {
+    .search-input-group input {
         flex: 1;
         padding: var(--space-4);
         border: 1px solid var(--color-border);
@@ -103,13 +97,11 @@
         outline: none;
     }
 
-    .search-input-group input:focus
-    {
+    .search-input-group input:focus {
         border-color: var(--color-primary);
     }
 
-    .search-btn
-    {
+    .search-btn {
         padding: var(--space-4) var(--space-8);
         background: var(--color-primary);
         color: white;
@@ -120,32 +112,27 @@
         transition: background 0.15s;
     }
 
-    .search-btn:hover
-    {
+    .search-btn:hover {
         background: var(--color-primary-dark);
     }
 
-    .search-tabs
-    {
+    .search-tabs {
         display: flex;
         justify-content: center;
         gap: var(--space-4);
     }
 
-    .search-tab
-    {
+    .search-tab {
         cursor: pointer;
     }
 
-    .search-tab input
-    {
+    .search-tab input {
         position: absolute;
         opacity: 0;
         pointer-events: none;
     }
 
-    .search-tab span
-    {
+    .search-tab span {
         display: inline-block;
         padding: var(--space-2) var(--space-6);
         border-radius: var(--radius-md);
@@ -155,43 +142,35 @@
         transition: all 0.15s;
     }
 
-    .search-tab input:checked + span
-    {
+    .search-tab input:checked + span {
         background: var(--color-primary);
         color: white;
         border-color: var(--color-primary);
     }
 
-    .search-tab:hover span
-    {
+    .search-tab:hover span {
         border-color: var(--color-primary);
     }
 
-    .featured
-    {
+    .featured {
         padding: var(--space-12) 0;
     }
 
-    .featured h2
-    {
+    .featured h2 {
         margin-bottom: var(--space-2);
     }
 
-    .section-subtitle
-    {
+    .section-subtitle {
         color: var(--color-text-secondary);
         margin-bottom: var(--space-8);
     }
 
-    @media (max-width: 640px)
-    {
-        .hero h1
-        {
+    @media (max-width: 640px) {
+        .hero h1 {
             font-size: 1.75rem;
         }
 
-        .hero-subtitle
-        {
+        .hero-subtitle {
             font-size: 1rem;
         }
     }

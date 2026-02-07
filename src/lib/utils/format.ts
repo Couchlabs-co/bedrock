@@ -7,10 +7,8 @@
  * @example formatPrice(500000) → "$500,000"
  * @example formatPrice(1250000) → "$1,250,000"
  */
-export function formatPrice(amount: number | null | undefined): string
-{
-    if (amount == null)
-    {
+export function formatPrice(amount: number | null | undefined): string {
+    if (amount == null) {
         return "Price on request";
     }
 
@@ -26,13 +24,8 @@ export function formatPrice(amount: number | null | undefined): string
  * Format rent with period.
  * @example formatRent(550, "week") → "$550 /wk"
  */
-export function formatRent(
-    amount: number | null | undefined,
-    period: string | null | undefined,
-): string
-{
-    if (amount == null)
-    {
+export function formatRent(amount: number | null | undefined, period: string | null | undefined): string {
+    if (amount == null) {
         return "Contact agent";
     }
 
@@ -44,10 +37,8 @@ export function formatRent(
  * Format a date for display.
  * @example formatDate("2025-01-15T00:00:00Z") → "15 Jan 2025"
  */
-export function formatDate(date: string | Date | null | undefined): string
-{
-    if (date == null)
-    {
+export function formatDate(date: string | Date | null | undefined): string {
+    if (date == null) {
         return "";
     }
 
@@ -63,13 +54,8 @@ export function formatDate(date: string | Date | null | undefined): string
  * Format land/building area with unit.
  * @example formatArea(450, "squareMeter") → "450 m²"
  */
-export function formatArea(
-    value: number | null | undefined,
-    unit: string | null | undefined,
-): string
-{
-    if (value == null)
-    {
+export function formatArea(value: number | null | undefined, unit: string | null | undefined): string {
+    if (value == null) {
         return "";
     }
 

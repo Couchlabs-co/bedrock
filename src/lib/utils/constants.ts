@@ -67,14 +67,7 @@ export const RURAL_CATEGORIES = [
 ] as const;
 
 /** Listing statuses */
-export const LISTING_STATUSES = [
-    "current",
-    "withdrawn",
-    "offmarket",
-    "sold",
-    "leased",
-    "deleted",
-] as const;
+export const LISTING_STATUSES = ["current", "withdrawn", "offmarket", "sold", "leased", "deleted"] as const;
 
 /** Authority types */
 export const AUTHORITY_TYPES = [

@@ -1,13 +1,10 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
-declare global
-{
-    namespace App
-    {
+declare global {
+    namespace App {
         // interface Error {}
 
-        interface Locals
-        {
+        interface Locals {
             /** The authenticated user, if any. Populated by hooks.server.ts */
             user: {
                 id: string;
