@@ -1,0 +1,16 @@
+# Package managers
+node_modules/
+bun.lockb
+
+# Build output
+build/
+dist/
+.svelte-kit/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store

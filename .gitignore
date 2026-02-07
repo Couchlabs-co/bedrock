@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+bun.lockb
+
+# Build output
+build/
+dist/
+.svelte-kit/
+out/
+*.tgz
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Testing & coverage
+coverage/
+*.lcov
+
+# Logs
+logs/
+*.log
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# Editor / IDE
+.idea/
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Playwright
+test-results/
+playwright-report/
+
+data/
