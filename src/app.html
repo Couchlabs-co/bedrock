@@ -5,6 +5,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="LOCATION — Australia's modern property listing platform" />
         <link rel="icon" href="%sveltekit.assets%/favicon.ico" />
+        <script>
+            // Prevent theme flash — runs before first paint
+            (function () {
+                var pref = localStorage.getItem("location-theme") || "system";
+                var theme = pref;
+                if (pref === "system") {
+                    theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+                        ? "dark"
+                        : "light";
+                }
+                document.documentElement.setAttribute("data-theme", theme);
+            })();
+        </script>
         %sveltekit.head%
     </head>
     <body data-sveltekit-preload-data="hover">
