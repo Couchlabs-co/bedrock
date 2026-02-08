@@ -3,6 +3,7 @@
  */
 
 export * from "./api";
+export * from "./search";
 
 /**
  * Authenticated user shape passed from server layout to client.

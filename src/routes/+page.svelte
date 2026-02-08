@@ -1,5 +1,31 @@
 <script lang="ts">
-    // Homepage — hero search + featured listings
+    import { goto } from "$app/navigation";
+    import type { SuburbResult } from "$types/api";
+    import SuburbAutocomplete from "$lib/components/search/SuburbAutocomplete.svelte";
+
+    /** Track the user's free-text query */
+    let searchText = $state("");
+
+    /** Track the selected listing type tab */
+    let listingType = $state("sale");
+
+    /**
+     * Handle suburb selection from autocomplete — navigate directly.
+     */
+    function handleSuburbSelect(suburb: SuburbResult): void {
+        goto(
+            `/search?suburb=${encodeURIComponent(suburb.suburb)}&postcode=${suburb.postcode}&state=${encodeURIComponent(suburb.state)}&listingType=${listingType}`,
+        );
+    }
+
+    /**
+     * Handle form submission with free text.
+     */
+    function handleSearchSubmit(e: SubmitEvent): void {
+        e.preventDefault();
+        if (!searchText.trim()) return;
+        goto(`/search?q=${encodeURIComponent(searchText.trim())}&listingType=${listingType}`);
+    }
 </script>
 
 <svelte:head>
@@ -15,26 +41,45 @@
         <h1 id="hero-heading">Find your next home</h1>
         <p class="hero-subtitle">Search thousands of properties for sale and rent across Australia</p>
 
-        <form class="hero-search" action="/search" method="get" role="search" aria-label="Property search">
+        <form class="hero-search" onsubmit={handleSearchSubmit} role="search" aria-label="Property search">
             <div class="search-input-group">
-                <label for="search-input" class="sr-only">Search by suburb, postcode, or address</label>
-                <input
-                    id="search-input"
-                    type="text"
+                <SuburbAutocomplete
+                    value=""
+                    onSelect={handleSuburbSelect}
+                    onInput={(v) => {
+                        searchText = v;
+                    }}
                     name="q"
+                    id="search-input"
                     placeholder="Search suburb, postcode, or address..."
-                    autocomplete="off"
+                    className="hero-autocomplete"
                 />
                 <button type="submit" class="search-btn"> Search </button>
             </div>
 
-            <div class="search-tabs" role="tablist" aria-label="Listing type">
+            <div class="search-tabs" role="radiogroup" aria-label="Listing type">
                 <label class="search-tab">
-                    <input type="radio" name="listingType" value="sale" checked />
+                    <input
+                        type="radio"
+                        name="listingType"
+                        value="sale"
+                        checked={listingType === "sale"}
+                        onchange={() => {
+                            listingType = "sale";
+                        }}
+                    />
                     <span>Buy</span>
                 </label>
                 <label class="search-tab">
-                    <input type="radio" name="listingType" value="rent" />
+                    <input
+                        type="radio"
+                        name="listingType"
+                        value="rent"
+                        checked={listingType === "rent"}
+                        onchange={() => {
+                            listingType = "rent";
+                        }}
+                    />
                     <span>Rent</span>
                 </label>
             </div>
@@ -82,27 +127,32 @@
 
     .search-input-group {
         display: flex;
+        align-items: stretch;
         border-radius: var(--radius-lg);
-        overflow: hidden;
+        overflow: visible;
         box-shadow: var(--shadow-md);
+        position: relative;
     }
 
-    .search-input-group input {
+    :global(.hero-autocomplete) {
         flex: 1;
-        padding: var(--space-4);
-        border: 1px solid var(--color-border);
+    }
+
+    :global(.hero-autocomplete input) {
+        height: 100%;
+        box-sizing: border-box;
         border-right: none;
         border-radius: var(--radius-lg) 0 0 var(--radius-lg);
         font-size: 1rem;
-        outline: none;
+        padding: var(--space-3) var(--space-4);
     }
 
-    .search-input-group input:focus {
-        border-color: var(--color-primary);
+    :global(.hero-autocomplete .suggestions) {
+        border-radius: var(--radius-md);
     }
 
     .search-btn {
-        padding: var(--space-4) var(--space-8);
+        padding: var(--space-3) var(--space-8);
         background: var(--color-primary);
         color: white;
         font-weight: 600;
@@ -110,6 +160,7 @@
         border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
         border: 1px solid var(--color-primary);
         transition: background 0.15s;
+        flex-shrink: 0;
     }
 
     .search-btn:hover {

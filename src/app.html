@@ -11,9 +11,7 @@
                 var pref = localStorage.getItem("location-theme") || "system";
                 var theme = pref;
                 if (pref === "system") {
-                    theme = window.matchMedia("(prefers-color-scheme: dark)").matches
-                        ? "dark"
-                        : "light";
+                    theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
                 }
                 document.documentElement.setAttribute("data-theme", theme);
             })();
