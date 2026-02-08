@@ -48,4 +48,8 @@ docker-compose.override.yml
 test-results/
 playwright-report/
 
-data/
+data/CLAUDE-*
+data/REAXML-*
+data/*.zip
+data/*.csv
+data/propertyList.dtd
