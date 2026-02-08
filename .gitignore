@@ -6,6 +6,7 @@ bun.lockb
 build/
 dist/
 .svelte-kit/
+.vercel/
 out/
 *.tgz
 
