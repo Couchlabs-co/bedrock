@@ -167,14 +167,14 @@ describe("residential parsing", () => {
         describe("agents", () => {
             it("extracts listing agent", () => {
                 expect(listing.agents).toHaveLength(1);
-                expect(listing.agents[0].name).toBe("Mr. John Doe");
-                expect(listing.agents[0].email).toBe("jdoe@somedomain.com.au");
-                expect(listing.agents[0].phoneMobile).toBe("05 1234 5678");
-                expect(listing.agents[0].position).toBe(1);
+                expect(listing.agents[0]!.name).toBe("Mr. John Doe");
+                expect(listing.agents[0]!.email).toBe("jdoe@somedomain.com.au");
+                expect(listing.agents[0]!.phoneMobile).toBe("05 1234 5678");
+                expect(listing.agents[0]!.position).toBe(1);
             });
 
             it("extracts agent social links", () => {
-                expect(listing.agents[0].twitterUrl).toBe("https://www.twitter.com/JohnDoe");
+                expect(listing.agents[0]!.twitterUrl).toBe("https://www.twitter.com/JohnDoe");
             });
         });
 
@@ -182,29 +182,29 @@ describe("residential parsing", () => {
             it("extracts photos", () => {
                 const photos = listing.images.filter((i) => i.type === "photo");
                 expect(photos).toHaveLength(2);
-                expect(photos[0].originalId).toBe("m");
-                expect(photos[0].url).toContain("imageM.jpg");
-                expect(photos[0].format).toBe("jpg");
-                expect(photos[0].sortOrder).toBe(0);
-                expect(photos[1].originalId).toBe("a");
-                expect(photos[1].sortOrder).toBe(1);
+                expect(photos[0]!.originalId).toBe("m");
+                expect(photos[0]!.url).toContain("imageM.jpg");
+                expect(photos[0]!.format).toBe("jpg");
+                expect(photos[0]!.sortOrder).toBe(0);
+                expect(photos[1]!.originalId).toBe("a");
+                expect(photos[1]!.sortOrder).toBe(1);
             });
 
             it("extracts floorplans", () => {
                 const floorplans = listing.images.filter((i) => i.type === "floorplan");
                 expect(floorplans).toHaveLength(2);
-                expect(floorplans[0].url).toContain("floorplan1.gif");
+                expect(floorplans[0]!.url).toContain("floorplan1.gif");
             });
         });
 
         describe("inspections", () => {
             it("extracts inspection times", () => {
                 expect(listing.inspections).toHaveLength(2);
-                expect(listing.inspections[0].description).toBe("21-Jan-2009 11:00am to 1:00pm");
+                expect(listing.inspections[0]!.description).toBe("21-Jan-2009 11:00am to 1:00pm");
             });
 
             it("parses inspection start and end times", () => {
-                const insp = listing.inspections[0];
+                const insp = listing.inspections[0]!;
                 expect(insp.startsAt).toBeInstanceOf(Date);
                 expect(insp.endsAt).toBeInstanceOf(Date);
             });
@@ -288,7 +288,7 @@ describe("rental parsing", () => {
         });
 
         it("extracts agent social media links", () => {
-            const agent = rental.agents[0];
+            const agent = rental.agents[0]!;
             expect(agent.facebookUrl).toContain("facebook.com");
             expect(agent.linkedinUrl).toContain("linkedin.com");
         });
@@ -354,10 +354,10 @@ describe("commercial parsing", () => {
 
         it("extracts multiple listing agents", () => {
             expect(listing.agents).toHaveLength(2);
-            expect(listing.agents[0].name).toBe("Mr. John Doe");
-            expect(listing.agents[1].name).toBe("Mrs. Jane Doe");
-            expect(listing.agents[0].position).toBe(1);
-            expect(listing.agents[1].position).toBe(2);
+            expect(listing.agents[0]!.name).toBe("Mr. John Doe");
+            expect(listing.agents[1]!.name).toBe("Mrs. Jane Doe");
+            expect(listing.agents[0]!.position).toBe(1);
+            expect(listing.agents[1]!.position).toBe(2);
         });
 
         it("extracts auction date", () => {
@@ -451,7 +451,7 @@ describe("rural parsing", () => {
         });
 
         it("extracts agent Facebook URL", () => {
-            expect(listing.agents[0].facebookUrl).toContain("facebook.com");
+            expect(listing.agents[0]!.facebookUrl).toContain("facebook.com");
         });
     });
 });

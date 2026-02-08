@@ -217,9 +217,9 @@ describe("mapListingToDb", () => {
         const mapped = mapListingToDb(parsed, agencyId, listingId);
 
         expect(mapped.images).toHaveLength(1);
-        expect(mapped.images[0].listingId).toBe(listingId);
-        expect(mapped.images[0].type).toBe("photo");
-        expect(mapped.images[0].sortOrder).toBe(0);
+        expect(mapped.images[0]!.listingId).toBe(listingId);
+        expect(mapped.images[0]!.type).toBe("photo");
+        expect(mapped.images[0]!.sortOrder).toBe(0);
     });
 
     it("maps inspections with listingId", () => {
@@ -227,8 +227,8 @@ describe("mapListingToDb", () => {
         const mapped = mapListingToDb(parsed, agencyId, listingId);
 
         expect(mapped.inspections).toHaveLength(1);
-        expect(mapped.inspections[0].listingId).toBe(listingId);
-        expect(mapped.inspections[0].startsAt).toBeInstanceOf(Date);
+        expect(mapped.inspections[0]!.listingId).toBe(listingId);
+        expect(mapped.inspections[0]!.startsAt).toBeInstanceOf(Date);
     });
 
     it("maps agents with listingId", () => {
@@ -236,9 +236,9 @@ describe("mapListingToDb", () => {
         const mapped = mapListingToDb(parsed, agencyId, listingId);
 
         expect(mapped.agents).toHaveLength(1);
-        expect(mapped.agents[0].listingId).toBe(listingId);
-        expect(mapped.agents[0].name).toBe("Mr. John Doe");
-        expect(mapped.agents[0].position).toBe(1);
+        expect(mapped.agents[0]!.listingId).toBe(listingId);
+        expect(mapped.agents[0]!.name).toBe("Mr. John Doe");
+        expect(mapped.agents[0]!.position).toBe(1);
     });
 
     it("handles null address", () => {

@@ -345,7 +345,7 @@ describe("validateListings", () => {
     it("validates multiple listings", () => {
         const results = validateListings([createValidListing(), createValidListing({ agentId: "" })]);
         expect(results).toHaveLength(2);
-        expect(results[0].valid).toBe(true);
-        expect(results[1].valid).toBe(false);
+        expect(results[0]!.valid).toBe(true);
+        expect(results[1]!.valid).toBe(false);
     });
 });

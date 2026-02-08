@@ -121,7 +121,7 @@ async function processListing(parsed: ParsedListing, db: Database): Promise<Inge
         };
     }
 
-    const agencyId = agency[0].id;
+    const agencyId = agency[0]!.id;
 
     // 3. Check for existing listing (upsert key: crm_agent_id + crm_unique_id)
     const existing = await db
@@ -133,7 +133,7 @@ async function processListing(parsed: ParsedListing, db: Database): Promise<Inge
     try {
         if (existing.length > 0) {
             // Update existing listing
-            return await updateListing(parsed, agencyId, existing[0].id, existing[0].status, db);
+            return await updateListing(parsed, agencyId, existing[0]!.id, existing[0]!.status, db);
         } else {
             // Create new listing
             return await createListing(parsed, agencyId, db);
@@ -217,7 +217,7 @@ async function createListing(parsed: ParsedListing, agencyId: string, db: Databa
         })
         .returning({ id: listings.id });
 
-    const listingId = inserted.id;
+    const listingId = inserted!.id;
     const mapped = mapListingToDb(parsed, agencyId, listingId);
 
     // Insert related records

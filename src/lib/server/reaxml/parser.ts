@@ -688,8 +688,8 @@ function parseInspectionTime(description: string): { startsAt: Date | null; ends
     }
 
     const [, datePart, startTime, endTime] = match;
-    const startsAt = parseDateTimeString(datePart, startTime);
-    const endsAt = parseDateTimeString(datePart, endTime);
+    const startsAt = parseDateTimeString(datePart!, startTime!);
+    const endsAt = parseDateTimeString(datePart!, endTime!);
 
     return { startsAt, endsAt };
 }
@@ -715,18 +715,18 @@ function parseDateTimeString(datePart: string, timePart: string): Date | null {
         const dateParts = datePart.split("-");
         if (dateParts.length !== 3) return null;
 
-        const day = parseInt(dateParts[0], 10);
-        const month = MONTH_MAP[dateParts[1].toLowerCase()];
-        const year = parseInt(dateParts[2], 10);
+        const day = parseInt(dateParts[0]!, 10);
+        const month = MONTH_MAP[dateParts[1]!.toLowerCase()];
+        const year = parseInt(dateParts[2]!, 10);
 
         if (month === undefined || isNaN(day) || isNaN(year)) return null;
 
         const timeMatch = timePart.match(/^(\d{1,2}):(\d{2})(am|pm)$/i);
         if (!timeMatch) return null;
 
-        let hours = parseInt(timeMatch[1], 10);
-        const minutes = parseInt(timeMatch[2], 10);
-        const meridiem = timeMatch[3].toLowerCase();
+        let hours = parseInt(timeMatch[1]!, 10);
+        const minutes = parseInt(timeMatch[2]!, 10);
+        const meridiem = timeMatch[3]!.toLowerCase();
 
         if (meridiem === "pm" && hours !== 12) hours += 12;
         if (meridiem === "am" && hours === 12) hours = 0;
