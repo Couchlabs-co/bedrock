@@ -4,7 +4,7 @@
 -->
 <script lang="ts">
     import { page } from "$app/stores";
-    import { toggleTheme, getTheme } from "$lib/stores/theme";
+    import { toggleTheme, getTheme } from "$lib/stores/theme.svelte";
 
     interface Props {
         /** Authenticated user, if any */

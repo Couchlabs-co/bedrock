@@ -1,7 +1,7 @@
 <script lang="ts">
     import "../app.css";
     import { onMount } from "svelte";
-    import { initTheme } from "$lib/stores/theme";
+    import { initTheme } from "$lib/stores/theme.svelte";
     import Header from "$lib/components/layout/Header.svelte";
     import Footer from "$lib/components/layout/Footer.svelte";
     import MobileNav from "$lib/components/layout/MobileNav.svelte";
