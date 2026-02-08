@@ -198,6 +198,34 @@ export const agentListingSearchSchema = z.object({
     limit: z.coerce.number().int().min(1).max(100).optional().default(20),
 });
 
+// ============================================================
+// INQUIRIES
+// ============================================================
+
+/** Create inquiry schema — public, no auth required */
+export const createInquirySchema = z.object({
+    listingId: z.string().uuid(),
+    senderName: z.string().min(1).max(200),
+    senderEmail: z.string().email().max(200),
+    senderPhone: z.string().max(30).optional(),
+    message: z.string().min(1).max(5000),
+});
+
+/** Update inquiry status schema — agent marks as read/responded */
+export const updateInquiryStatusSchema = z.object({
+    status: z.enum(["read", "responded"]),
+});
+
+/** Agent inquiry list search params */
+export const inquirySearchSchema = z.object({
+    status: z.enum(["unread", "read", "responded"]).optional(),
+    listingId: z.string().uuid().optional(),
+    sort: z.enum(["date"]).optional(),
+    order: z.enum(["asc", "desc"]).optional(),
+    page: z.coerce.number().int().positive().optional().default(1),
+    limit: z.coerce.number().int().min(1).max(100).optional().default(20),
+});
+
 /**
  * Parse URL search params into a plain object for Zod validation.
  * Only includes keys that have non-empty values.
