@@ -250,7 +250,7 @@ export async function createListing(
         .insert(listings)
         .values({
             agencyId,
-            crmUniqueId: crypto.randomUUID(),
+            externalListingId: crypto.randomUUID(),
             crmAgentId: "API",
             propertyType: input.propertyType,
             category: input.category ?? null,

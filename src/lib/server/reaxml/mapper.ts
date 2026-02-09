@@ -12,7 +12,7 @@ import type { ParsedListing, ParsedAddress, ParsedFeatures, ParsedImage, ParsedI
 /** Insert shape for the listings table */
 export interface ListingInsert {
     agencyId: string;
-    crmUniqueId: string;
+    externalListingId: string;
     crmAgentId: string;
     propertyType: string;
     category: string | null;
@@ -157,7 +157,7 @@ export function mapListingToDb(parsed: ParsedListing, agencyId: string, listingI
 function mapListing(parsed: ParsedListing, agencyId: string): ListingInsert {
     return {
         agencyId,
-        crmUniqueId: parsed.uniqueId,
+        externalListingId: parsed.uniqueId,
         crmAgentId: parsed.agentId,
         propertyType: parsed.propertyType,
         category: parsed.category,

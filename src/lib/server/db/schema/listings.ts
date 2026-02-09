@@ -16,6 +16,7 @@ import {
     uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { agencies } from "./organisations";
+import { properties, addresses } from "./properties";
 import { tsvector } from "./custom-types";
 
 /** Listings — unified property listing table */
@@ -23,19 +24,21 @@ export const listings = pgTable(
     "listings",
     {
         id: uuid("id").primaryKey().defaultRandom(),
+        propertyId: uuid("property_id").references(() => properties.id, { onDelete: "restrict" }),
+        listingAddressId: uuid("listing_address_id").references(() => addresses.id, { onDelete: "restrict" }),
         agencyId: uuid("agency_id")
             .notNull()
             .references(() => agencies.id),
 
-        // REAXML identifiers
-        crmUniqueId: text("crm_unique_id").notNull(),
+        // External system identifiers (for deduplication)
+        externalListingId: text("external_listing_id").notNull(),
         crmAgentId: text("crm_agent_id").notNull(),
 
         // Classification
         propertyType: text("property_type").notNull(), // residential, rental, commercial, land, rural, holidayRental
         category: text("category"), // House, Unit, Apartment, etc.
-        listingType: text("listing_type").notNull(), // sale, rent, lease, both
-        status: text("status").notNull().default("current"), // current, withdrawn, offmarket, sold, leased, deleted
+        listingType: text("listing_type").notNull(), // sale, rent, lease, roomshare, holiday_rental
+        status: text("status").notNull().default("draft"), // draft, published, under_offer, sold, leased, archived, withdrawn
         authority: text("authority"), // exclusive, auction, open, etc.
 
         // Content
@@ -116,7 +119,8 @@ export const listings = pgTable(
         updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
     },
     (table) => [
-        uniqueIndex("idx_listings_crm").on(table.crmAgentId, table.crmUniqueId),
+        uniqueIndex("idx_listings_external").on(table.crmAgentId, table.externalListingId),
+        index("idx_listings_property").on(table.propertyId),
         index("idx_listings_status").on(table.status),
         index("idx_listings_property_type").on(table.propertyType),
         index("idx_listings_listing_type").on(table.listingType),

@@ -3,10 +3,9 @@
  * All have a foreign key to the listings table.
  */
 
-import { pgTable, uuid, text, boolean, timestamp, smallint, index, unique } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, boolean, timestamp, smallint, numeric, index, unique } from "drizzle-orm/pg-core";
 import { listings } from "./listings";
 import { agents } from "./organisations";
-import { geographyPoint } from "./custom-types";
 
 /** Listing features — normalised property feature flags */
 export const listingFeatures = pgTable("listing_features", {
@@ -88,13 +87,14 @@ export const listingAddresses = pgTable(
         region: text("region"),
         country: text("country").default("AUS"),
         municipality: text("municipality"),
-        location: geographyPoint("location"),
+        longitude: numeric("longitude"),
+        latitude: numeric("latitude"),
         formatted: text("formatted"), // computed at application layer
     },
     (table) => [
-        index("idx_addresses_suburb").on(table.suburb),
-        index("idx_addresses_postcode").on(table.postcode),
-        index("idx_addresses_state").on(table.state),
+        index("idx_listing_addresses_suburb").on(table.suburb),
+        index("idx_listing_addresses_postcode").on(table.postcode),
+        index("idx_listing_addresses_state").on(table.state),
     ],
 );
 

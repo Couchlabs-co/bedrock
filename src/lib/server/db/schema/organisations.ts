@@ -19,9 +19,7 @@ export const organisations = pgTable("organisations", {
 /** Agencies — real estate offices, belong to an organisation */
 export const agencies = pgTable("agencies", {
     id: uuid("id").primaryKey().defaultRandom(),
-    organisationId: uuid("organisation_id")
-        .notNull()
-        .references(() => organisations.id),
+    organisationId: uuid("organisation_id").references(() => organisations.id),
     agentIdCode: text("agent_id_code").notNull().unique(), // maps to REAXML <agentID>
     name: text("name").notNull(),
     slug: text("slug").notNull().unique(),
@@ -40,7 +38,9 @@ export const agents = pgTable("agents", {
     agencyId: uuid("agency_id")
         .notNull()
         .references(() => agencies.id),
-    userId: uuid("user_id").references(() => users.id),
+    userId: uuid("user_id")
+        .notNull()
+        .references(() => users.id),
     name: text("name").notNull(),
     email: text("email"),
     phoneMobile: text("phone_mobile"),

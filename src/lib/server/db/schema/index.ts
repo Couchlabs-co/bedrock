@@ -6,6 +6,7 @@
 export * from "./custom-types";
 export * from "./users";
 export * from "./organisations";
+export * from "./properties";
 export * from "./listings";
 export * from "./listing-details";
 export * from "./consumer";

@@ -165,7 +165,7 @@ describe("mapListingToDb", () => {
         const mapped = mapListingToDb(parsed, agencyId, listingId);
 
         expect(mapped.listing.agencyId).toBe(agencyId);
-        expect(mapped.listing.crmUniqueId).toBe("TEST001");
+        expect(mapped.listing.externalListingId).toBe("TEST001");
         expect(mapped.listing.crmAgentId).toBe("XNWXNW");
         expect(mapped.listing.propertyType).toBe("residential");
         expect(mapped.listing.status).toBe("current");

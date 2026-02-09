@@ -482,11 +482,17 @@ export async function getListingById(db: Database, id: string): Promise<ListingD
 /**
  * Find listings near a geographic point using PostGIS ST_DWithin.
  * Returns summary-level data sorted by distance.
+ *
+ * @deprecated PostGIS dependency removed. Re-enable when PostGIS is available.
+ * TODO: Implement Haversine formula for basic distance calculation or re-enable PostGIS.
  */
 export async function searchNearby(
     db: Database,
     params: NearbySearchParams,
 ): Promise<PaginatedResponse<ListingSummary & { distanceKm: number }>> {
+    throw new Error("Nearby search requires PostGIS extension. Feature temporarily disabled.");
+
+    /* PostGIS implementation - uncomment when PostGIS is re-enabled:
     const radiusKm = Math.min(params.radiusKm ?? DEFAULT_NEARBY_RADIUS_KM, MAX_NEARBY_RADIUS_KM);
     const radiusMetres = radiusKm * 1000;
     const { page, limit, offset } = normalisePagination(params.page, params.limit);
@@ -510,7 +516,9 @@ export async function searchNearby(
     const where = and(...conditions);
 
     const distanceExpr = sql<number>`round((ST_Distance(${listingAddresses.location}, ${point}) / 1000)::numeric, 2)`;
+    */
 
+    /* Count and fetch implementation - uncomment when PostGIS is re-enabled:
     // Count
     const countResult = await db
         .select({ count: sql<number>`count(*)::int` })
@@ -633,10 +641,13 @@ export async function searchNearby(
     });
 
     return { data, meta: buildMeta(total, page, limit) };
+    */
 }
 
 /**
- * Suburb autocomplete search using pg_trgm similarity.
+ * Suburb autocomplete search.
+ * Attempts pg_trgm similarity for fuzzy matching; falls back to ILIKE
+ * if the extension is not available.
  * Returns distinct suburb/state/postcode tuples matching the query.
  */
 export async function searchSuburbs(db: Database, query: string, limit: number = 10): Promise<SuburbResult[]> {
@@ -648,23 +659,44 @@ export async function searchSuburbs(db: Database, query: string, limit: number =
 
     const trimmed = query.trim();
 
-    // Use pg_trgm similarity + ilike for fuzzy matching on suburb
-    const results = await db
-        .selectDistinct({
-            suburb: listingAddresses.suburb,
-            state: listingAddresses.state,
-            postcode: listingAddresses.postcode,
-        })
-        .from(listingAddresses)
-        .where(
-            sql`(
-                ${listingAddresses.suburb} ILIKE ${`%${trimmed}%`}
-                OR ${listingAddresses.postcode} = ${trimmed}
-                OR similarity(${listingAddresses.suburb}, ${trimmed}) > 0.3
-            )`,
-        )
-        .orderBy(sql`similarity(${listingAddresses.suburb}, ${trimmed}) DESC`)
-        .limit(safeLimit);
+    let results: { suburb: string; state: string | null; postcode: string | null }[];
+
+    try {
+        // Prefer pg_trgm similarity + ILIKE for fuzzy matching
+        results = await db
+            .selectDistinct({
+                suburb: listingAddresses.suburb,
+                state: listingAddresses.state,
+                postcode: listingAddresses.postcode,
+            })
+            .from(listingAddresses)
+            .where(
+                sql`(
+                    ${listingAddresses.suburb} ILIKE ${`%${trimmed}%`}
+                    OR ${listingAddresses.postcode} = ${trimmed}
+                    OR similarity(${listingAddresses.suburb}, ${trimmed}) > 0.3
+                )`,
+            )
+            .orderBy(sql`similarity(${listingAddresses.suburb}, ${trimmed}) DESC`)
+            .limit(safeLimit);
+    } catch {
+        // Fallback: pg_trgm extension not available — use ILIKE only
+        results = await db
+            .selectDistinct({
+                suburb: listingAddresses.suburb,
+                state: listingAddresses.state,
+                postcode: listingAddresses.postcode,
+            })
+            .from(listingAddresses)
+            .where(
+                sql`(
+                    ${listingAddresses.suburb} ILIKE ${`%${trimmed}%`}
+                    OR ${listingAddresses.postcode} = ${trimmed}
+                )`,
+            )
+            .orderBy(listingAddresses.suburb)
+            .limit(safeLimit);
+    }
 
     // Filter out null state/postcode for type safety
     return results

@@ -6,6 +6,7 @@
 import { relations } from "drizzle-orm";
 import { organisations, agencies, agents } from "./organisations";
 import { users, sessions } from "./users";
+import { properties, addresses } from "./properties";
 import { listings } from "./listings";
 import { listingFeatures, listingAddresses, listingImages, listingInspections, listingAgents } from "./listing-details";
 import { favourites, savedSearches, inquiries, notifications } from "./consumer";
@@ -58,10 +59,35 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 }));
 
 // ============================================================
+// PROPERTIES & ADDRESSES
+// ============================================================
+
+export const addressesRelations = relations(addresses, ({ one, many }) => ({
+    property: one(properties),
+    listingsUsingThisAddress: many(listings),
+}));
+
+export const propertiesRelations = relations(properties, ({ one, many }) => ({
+    address: one(addresses, {
+        fields: [properties.addressId],
+        references: [addresses.id],
+    }),
+    listings: many(listings),
+}));
+
+// ============================================================
 // LISTINGS
 // ============================================================
 
 export const listingsRelations = relations(listings, ({ one, many }) => ({
+    property: one(properties, {
+        fields: [listings.propertyId],
+        references: [properties.id],
+    }),
+    listingAddress: one(addresses, {
+        fields: [listings.listingAddressId],
+        references: [addresses.id],
+    }),
     agency: one(agencies, {
         fields: [listings.agencyId],
         references: [agencies.id],

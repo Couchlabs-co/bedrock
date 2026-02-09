@@ -123,11 +123,11 @@ async function processListing(parsed: ParsedListing, db: Database): Promise<Inge
 
     const agencyId = agency[0]!.id;
 
-    // 3. Check for existing listing (upsert key: crm_agent_id + crm_unique_id)
+    // 3. Check for existing listing (upsert key: crm_agent_id + external_listing_id)
     const existing = await db
         .select({ id: listings.id, status: listings.status })
         .from(listings)
-        .where(and(eq(listings.crmAgentId, parsed.agentId), eq(listings.crmUniqueId, parsed.uniqueId)))
+        .where(and(eq(listings.crmAgentId, parsed.agentId), eq(listings.externalListingId, parsed.uniqueId)))
         .limit(1);
 
     try {
@@ -164,7 +164,7 @@ async function createListing(parsed: ParsedListing, agencyId: string, db: Databa
         .insert(listings)
         .values({
             agencyId,
-            crmUniqueId: parsed.uniqueId,
+            externalListingId: parsed.uniqueId,
             crmAgentId: parsed.agentId,
             propertyType: parsed.propertyType,
             category: parsed.category,
