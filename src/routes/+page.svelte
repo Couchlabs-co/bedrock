@@ -10,7 +10,7 @@
 
 <section class="hero">
     <h1>Find Your Dream Property</h1>
-    <p class="hero-subtitle">Search using natural language. Try: "3 bedroom house in Baulkham Hills with pool"</p>
+    <p class="hero-subtitle">Search using natural language. Try: "3 bedroom house in Mosman with pool"</p>
 
     <form
         class="hero-search"

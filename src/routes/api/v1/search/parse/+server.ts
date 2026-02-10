@@ -31,7 +31,14 @@ export const POST: RequestHandler = async ({ request }) => {
             return zodErrorResponse(parsed.error);
         }
 
-        const result = await parseSearchQuery(parsed.data.query);
+        // lets mock this response for now
+        // const result = await parseSearchQuery(parsed.data.query);
+        const result = {
+            criteria: { suburb: "Baulkham Hills", propertyType: "house", bedsMin: 3, features: { pool: true } },
+            confidence: "high",
+            originalQuery: parsed.data.query,
+        };
+        console.log("Parsed search query result:", result);
         return jsonOk(result);
     } catch (error) {
         console.error("NL search parse error:", error);
