@@ -17,6 +17,8 @@
         "format:check": "prettier --check ."
     },
     "dependencies": {
+        "@aws-sdk/client-bedrock-runtime": "^3.985.0",
+        "@aws-sdk/credential-providers": "^3.986.0",
         "drizzle-orm": "^0.45.1",
         "fast-xml-parser": "^5.2.0",
         "postgres": "^3.4.8",

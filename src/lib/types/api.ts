@@ -67,6 +67,34 @@ export interface SuburbResult {
     postcode: string;
 }
 
+/** Structured search criteria extracted from natural language query */
+export interface ParsedSearchCriteria {
+    suburb?: string;
+    postcode?: string;
+    state?: string;
+    propertyType?: string;
+    listingType?: string;
+    bedsMin?: number;
+    bathsMin?: number;
+    carsMin?: number;
+    priceMin?: number;
+    priceMax?: number;
+    features?: {
+        pool?: boolean;
+        airConditioning?: boolean;
+        garage?: boolean;
+        balcony?: boolean;
+        openFireplace?: boolean;
+    };
+}
+
+/** Natural language search parse response */
+export interface ParseSearchResponse {
+    criteria: ParsedSearchCriteria;
+    confidence: "high" | "medium" | "low";
+    originalQuery: string;
+}
+
 /** Listing summary — returned in search results (list view) */
 export interface ListingSummary {
     id: string;
