@@ -93,6 +93,7 @@ export interface ParseSearchResponse {
     criteria: ParsedSearchCriteria;
     confidence: "high" | "medium" | "low";
     originalQuery: string;
+    listings?: PaginatedResponse<ListingSummary>;
 }
 
 /** Listing summary — returned in search results (list view) */

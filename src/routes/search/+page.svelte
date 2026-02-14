@@ -3,9 +3,11 @@
     URL-driven: all filters are reflected in query params for shareability and SEO.
 -->
 <script lang="ts">
+    import { onMount } from "svelte";
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
-    import type { SuburbResult } from "$types/api";
+    import { getSearchState, clearSearchState, isSearchStateFresh } from "$stores/search.svelte";
+    import type { PaginatedResponse, ListingSummary, SuburbResult } from "$types/api";
     import type { FilterState } from "$types/search";
     import ListingCard from "$lib/components/listing/ListingCard.svelte";
     import SuburbAutocomplete from "$lib/components/search/SuburbAutocomplete.svelte";
@@ -16,6 +18,24 @@
     }
 
     let { data }: Props = $props();
+
+    /** Client-side cached listings from global state */
+    let clientListings = $state<PaginatedResponse<ListingSummary> | null>(null);
+    let useClientState = $state(false);
+
+    /** Hydrate from global state on mount */
+    onMount(() => {
+        const state = getSearchState();
+        if (state && isSearchStateFresh()) {
+            clientListings = state.listings;
+            useClientState = true;
+            // Clear immediately after consuming to prevent stale data on refresh
+            clearSearchState();
+        }
+    });
+
+    /** Use client state if available, otherwise SSR data */
+    let displayListings = $derived(useClientState && clientListings ? clientListings : data.listings);
 
     /** Layout toggle: grid or list */
     let viewLayout = $state<"grid" | "list">("grid");
@@ -46,6 +66,10 @@
      * Navigate with updated query params, preserving existing ones.
      */
     function updateSearch(updates: Record<string, string>): void {
+        // Clear client state since filters are changing
+        useClientState = false;
+        clientListings = null;
+
         // eslint-disable-next-line svelte/prefer-svelte-reactivity -- non-reactive local usage
         const params = new URLSearchParams($page.url.search);
 
@@ -104,7 +128,7 @@
 
     /** Generate page numbers for pagination */
     let pageNumbers = $derived.by(() => {
-        const total = data.listings.meta.pages;
+        const total = displayListings.meta.pages;
         const current = currentPage;
         const pages: (number | "ellipsis")[] = [];
 
@@ -199,8 +223,8 @@
                 <div class="results-meta">
                     <h1 class="results-title">{pageTitle}</h1>
                     <p class="results-count">
-                        {data.listings.meta.total.toLocaleString()}
-                        {data.listings.meta.total === 1 ? "result" : "results"}
+                        {displayListings.meta.total.toLocaleString()}
+                        {displayListings.meta.total === 1 ? "result" : "results"}
                     </p>
                 </div>
 
@@ -284,7 +308,7 @@
             </div>
 
             <!-- Listing cards -->
-            {#if data.listings.data.length === 0}
+            {#if displayListings.data.length === 0}
                 <div class="no-results">
                     <svg
                         width="48"
@@ -303,14 +327,14 @@
                 </div>
             {:else}
                 <div class="results-grid" class:list-view={viewLayout === "list"}>
-                    {#each data.listings.data as listing (listing.id)}
+                    {#each displayListings.data as listing (listing.id)}
                         <ListingCard {listing} layout={viewLayout} {isAuthenticated} />
                     {/each}
                 </div>
             {/if}
 
             <!-- Pagination -->
-            {#if data.listings.meta.pages > 1}
+            {#if displayListings.meta.pages > 1}
                 <nav class="pagination" aria-label="Search results pages">
                     <button
                         class="btn btn-outline btn-sm"
@@ -341,7 +365,7 @@
 
                     <button
                         class="btn btn-outline btn-sm"
-                        disabled={currentPage >= data.listings.meta.pages}
+                        disabled={currentPage >= displayListings.meta.pages}
                         onclick={() => goToPage(currentPage + 1)}
                         aria-label="Next page"
                     >

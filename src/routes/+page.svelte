@@ -1,5 +1,7 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
+    import { goto } from "$app/navigation";
+    import { setSearchState } from "$stores/search.svelte";
 
     let { form }: { form?: { error?: string; query?: string } } = $props();
 
@@ -18,8 +20,19 @@
         action="?/search"
         use:enhance={() => {
             isSearching = true;
-            return async ({ update }) => {
-                await update();
+            return async ({ result, update }) => {
+                if (result.type === 'success' && result.data?.success && result.data.data) {
+                    const { criteria, listings, originalQuery, confidence, redirectUrl } = result.data.data;
+
+                    // Store in global state for instant search page display
+                    setSearchState(criteria, listings, originalQuery, confidence);
+
+                    // Navigate to search page
+                    await goto(redirectUrl);
+                } else {
+                    // Show error via form prop
+                    await update();
+                }
                 isSearching = false;
             };
         }}

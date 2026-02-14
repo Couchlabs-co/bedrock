@@ -62,7 +62,7 @@ export async function searchListings(
     const { page, limit, offset } = normalisePagination(params.page, params.limit);
 
     // Build WHERE conditions
-    const conditions: SQL[] = [eq(listings.isPublished, true), eq(listings.status, "current")];
+    const conditions: SQL[] = [eq(listings.isPublished, true), eq(listings.status, "published")];
 
     if (params.propertyType) {
         conditions.push(eq(listings.propertyType, params.propertyType));
@@ -72,47 +72,47 @@ export async function searchListings(
         conditions.push(eq(listings.listingType, params.listingType));
     }
 
-    if (params.priceMin !== undefined) {
-        conditions.push(gte(listings.price, String(params.priceMin)));
-    }
+    // if (params.priceMin !== undefined) {
+    //     conditions.push(gte(listings.price, String(params.priceMin)));
+    // }
 
-    if (params.priceMax !== undefined) {
-        conditions.push(lte(listings.price, String(params.priceMax)));
-    }
+    // if (params.priceMax !== undefined) {
+    //     conditions.push(lte(listings.price, String(params.priceMax)));
+    // }
 
-    if (params.suburb) {
-        conditions.push(ilike(listingAddresses.suburb, params.suburb));
-    }
+    // if (params.suburb) {
+    //     conditions.push(ilike(listingAddresses.suburb, params.suburb));
+    // }
 
-    if (params.postcode) {
-        conditions.push(eq(listingAddresses.postcode, params.postcode));
-    }
+    // if (params.postcode) {
+    //     conditions.push(eq(listingAddresses.postcode, params.postcode));
+    // }
 
-    if (params.state) {
-        conditions.push(ilike(listingAddresses.state, params.state));
-    }
+    // if (params.state) {
+    //     conditions.push(ilike(listingAddresses.state, params.state));
+    // }
 
-    if (params.bedsMin !== undefined) {
-        conditions.push(gte(listingFeatures.bedrooms, params.bedsMin));
-    }
+    // if (params.bedsMin !== undefined) {
+    //     conditions.push(gte(listingFeatures.bedrooms, params.bedsMin));
+    // }
 
-    if (params.bathsMin !== undefined) {
-        conditions.push(gte(listingFeatures.bathrooms, params.bathsMin));
-    }
+    // if (params.bathsMin !== undefined) {
+    //     conditions.push(gte(listingFeatures.bathrooms, params.bathsMin));
+    // }
 
-    if (params.carsMin !== undefined) {
-        conditions.push(
-            gte(
-                sql`COALESCE(${listingFeatures.garages}, 0) + COALESCE(${listingFeatures.carports}, 0)`,
-                params.carsMin,
-            ),
-        );
-    }
+    // if (params.carsMin !== undefined) {
+    //     conditions.push(
+    //         gte(
+    //             sql`COALESCE(${listingFeatures.garages}, 0) + COALESCE(${listingFeatures.carports}, 0)`,
+    //             params.carsMin,
+    //         ),
+    //     );
+    // }
 
-    // Full-text search on headline + description
-    if (params.q) {
-        conditions.push(sql`${listings.searchVector} @@ plainto_tsquery('english', ${params.q})`);
-    }
+    // // Full-text search on headline + description
+    // if (params.q) {
+    //     conditions.push(sql`${listings.searchVector} @@ plainto_tsquery('english', ${params.q})`);
+    // }
 
     const where = and(...conditions);
 

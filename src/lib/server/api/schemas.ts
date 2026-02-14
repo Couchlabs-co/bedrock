@@ -17,7 +17,7 @@ export const listingSearchSchema = z.object({
     suburb: z.string().max(100).optional(),
     postcode: z.string().max(10).optional(),
     state: z.string().max(20).optional(),
-    propertyType: z.enum(["residential", "rental", "commercial", "land", "rural", "holidayRental"]).optional(),
+    propertyType: z.enum(["house", "apartment", "flat", "townhouse", "villa"]).optional(),
     listingType: z.enum(["sale", "rent", "lease", "both"]).optional(),
     priceMin: nonNegativeNum,
     priceMax: nonNegativeNum,

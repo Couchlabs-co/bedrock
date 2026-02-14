@@ -1,4 +1,4 @@
-import { fail, redirect } from "@sveltejs/kit";
+import { fail } from "@sveltejs/kit";
 import type { RequestEvent } from "@sveltejs/kit";
 import type { ParseSearchResponse } from "$types/api";
 
@@ -29,6 +29,14 @@ export const actions = {
 
             const result: ParseSearchResponse = await response.json();
 
+            // Validate listings are present
+            if (!result.listings || !result.listings.data) {
+                return fail(500, {
+                    error: "Invalid response from search service",
+                    query,
+                });
+            }
+
             // Build search URL with parsed criteria
             const params = new URLSearchParams();
             params.set("q", query);
@@ -44,14 +52,21 @@ export const actions = {
             if (result.criteria.priceMin) params.set("priceMin", String(result.criteria.priceMin));
             if (result.criteria.priceMax) params.set("priceMax", String(result.criteria.priceMax));
 
-            // Redirect to search page with parsed criteria
-            throw redirect(303, `/search?${params.toString()}`);
-        } catch (error) {
-            // Re-throw redirect errors
-            if (error instanceof Response && error.status === 303) {
-                throw error;
-            }
+            // Build redirect URL with all params
+            const redirectUrl = `/search?${params.toString()}`;
 
+            // Return data to client for global state + navigation
+            return {
+                success: true,
+                data: {
+                    criteria: result.criteria,
+                    listings: result.listings,
+                    originalQuery: query,
+                    confidence: result.confidence,
+                    redirectUrl,
+                },
+            };
+        } catch (error) {
             console.error("Search error:", error);
             return fail(500, {
                 error: "An unexpected error occurred. Please try again.",
