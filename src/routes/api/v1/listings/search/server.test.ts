@@ -105,13 +105,13 @@ describe("GET /api/v1/listings/search", () => {
         });
 
         it("should filter by property type", async () => {
-            const url = new URL("http://localhost/api/v1/listings/search?propertyType=residential");
+            const url = new URL("http://localhost/api/v1/listings/search?propertyType=house");
             const response = await GET(createMockRequest(url));
             const data = await response.json();
 
             expect(response.status).toBe(200);
             if (data.data.length > 0) {
-                expect(data.data.every((listing: any) => listing.propertyType === "residential")).toBe(true);
+                expect(data.data.every((listing: any) => listing.propertyType === "house")).toBe(true);
             }
         });
     });
@@ -177,7 +177,7 @@ describe("GET /api/v1/listings/search", () => {
     describe("Combined filters", () => {
         it("should apply multiple filters simultaneously", async () => {
             const url = new URL(
-                "http://localhost/api/v1/listings/search?listingType=sale&propertyType=residential&bedsMin=3&priceMin=500000&priceMax=1000000",
+                "http://localhost/api/v1/listings/search?listingType=sale&propertyType=house&bedsMin=3&priceMin=500000&priceMax=1000000",
             );
             const response = await GET(createMockRequest(url));
             const data = await response.json();

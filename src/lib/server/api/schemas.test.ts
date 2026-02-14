@@ -36,7 +36,7 @@ describe("listingSearchSchema", () => {
         const result = listingSearchSchema.safeParse({
             suburb: "RICHMOND",
             state: "vic",
-            propertyType: "residential",
+            propertyType: "house",
             listingType: "sale",
             priceMin: "300000",
             priceMax: "600000",
